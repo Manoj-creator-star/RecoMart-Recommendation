@@ -398,6 +398,80 @@ Serialized Recommendation Model
 - Feast Feature Store
 - GitHub Actions CI/CD
 - Docker containerization
+
+---
+
+# ▶️ Quick Start
+
+## 1. Environment Setup
+
+Create and activate a Python environment, then install dependencies:
+
+```bash
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## 2. Run the Pipeline
+
+Run the full end-to-end workflow:
+
+```bash
+python -m orchestration.prefect_pipeline
+```
+
+Or run each stage step-by-step:
+
+```bash
+python -m ingestion.run_ingestion
+python -m validation.validate_clickstream
+python -m validation.validate_purchase
+python -m validation.validate_products
+python -m preprocessing.prepare_data
+python -m transformation.feature_engineering
+python -m feature_store.register_features
+python -m models.prepare_training_data
+python -m models.train_model
+python -m models.evaluate
+```
+
+## 3. Expected Outputs
+
+The pipeline generates:
+
+- Raw data under the data/raw folders
+- Prepared datasets in data/processed
+- Feature tables in the SQLite database at database/feature_store.db
+- Training data in data/model/training_data.csv
+- A model artifact in models/saved_models/knn_model.pkl
+- A validation summary in validation_reports/data_quality_report.csv
+
+---
+
+# 📝 Assignment Alignment
+
+This repository already addresses the main deliverables required for the assignment:
+
+- Problem formulation and business context are captured in this README and the project workflow.
+- Ingestion scripts are implemented for clickstream, purchase, and product data.
+- Validation logic is implemented for all data sources and a consolidated report is produced.
+- Data preparation, feature engineering, and feature-store registration are implemented.
+- A training dataset and recommendation model are produced.
+- A Prefect-based orchestration pipeline is included for end-to-end execution.
+
+For the submission PDF, the project can be presented using the structure below:
+
+1. Project Title
+2. Team Member Details
+3. Problem Statement
+4. Objectives
+5. Methodology and Pipeline
+6. Implementation Details
+7. Results and Output Screenshots
+8. Conclusion and Future Scope
+
+A submission-ready summary document is available in docs/assignment_submission_guide.md.
 - Kubernetes deployment
 - Monitoring with Prometheus and Grafana
 - Streamlit dashboard

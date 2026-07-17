@@ -9,15 +9,14 @@ from validation.validate_products import VALIDATION_RESULT as products
 reports = [purchase, clickstream, products]
 
 report = pd.DataFrame(reports)
-
 report["Validation Time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-Path("reports").mkdir(exist_ok=True)
+BASE_DIR = Path(__file__).resolve().parent.parent
+REPORT_DIR = BASE_DIR / "validation_reports"
+REPORT_DIR.mkdir(exist_ok=True)
+REPORT_PATH = REPORT_DIR / "data_quality_report.csv"
 
-report.to_csv(
-    "reports/data_quality_report.csv",
-    index=False
-)
+report.to_csv(REPORT_PATH, index=False)
 
 print("\n" + "=" * 65)
 print("           RECOMART DATA QUALITY REPORT")
@@ -33,5 +32,5 @@ print(f"Passed : {(report['Status'] == 'Passed').sum()}")
 print(f"Failed : {(report['Status'] == 'Failed').sum()}")
 print("-" * 65)
 
-print("\nCSV Report saved to reports/data_quality_report.csv")
+print(f"\nCSV Report saved to {REPORT_PATH}")
 print("=" * 65)

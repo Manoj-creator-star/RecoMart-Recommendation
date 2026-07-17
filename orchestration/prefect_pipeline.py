@@ -1,9 +1,7 @@
-from prefect import flow, task
 import subprocess
 import time
 
 
-@task
 def run_step(name, cmd):
 
     print(f"\n{'='*60}")
@@ -20,7 +18,6 @@ def run_step(name, cmd):
     print(f"Completed in {time.time()-start:.2f} sec")
 
 
-@flow(name="RecoMart Pipeline")
 def recomart_pipeline():
 
     run_step(
