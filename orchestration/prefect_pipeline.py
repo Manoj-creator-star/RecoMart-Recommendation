@@ -71,6 +71,11 @@ def recomart_pipeline():
     )
 
     run_step(
+        "Compute Evaluation Metrics",
+        ["python", "-m", "models.evaluate_metrics"]
+    )
+
+    run_step(
         "Generate Recommendations",
         ["python", "-m", "models.recommend"]
     )
