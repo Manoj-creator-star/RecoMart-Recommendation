@@ -70,6 +70,11 @@ def recomart_pipeline():
         ["python", "-m", "models.evaluate"]
     )
 
+    run_step(
+        "Generate Recommendations",
+        ["python", "-m", "models.recommend"]
+    )
+
 
 if __name__ == "__main__":
     recomart_pipeline()

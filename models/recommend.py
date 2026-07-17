@@ -7,6 +7,20 @@ import pandas as pd
 MODEL_PATH = Path("models/saved_models/knn_model.pkl")
 
 
+def _to_native(value):
+    if isinstance(value, dict):
+        return {str(k): _to_native(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_to_native(v) for v in value]
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, np.ndarray):
+        return [_to_native(v) for v in value.tolist()]
+    if pd.api.types.is_scalar(value):
+        return value.item() if hasattr(value, "item") else value
+    return value
+
+
 def load_model():
     if not MODEL_PATH.exists():
         raise FileNotFoundError(f"Model not found at {MODEL_PATH}")
@@ -37,7 +51,7 @@ def predict_top_k(user_id, top_k=5):
 
 def recommend_products(user_id, top_k=5):
     result = predict_top_k(user_id, top_k=top_k)
-    return json.dumps(result, indent=2)
+    return json.dumps(_to_native(result), indent=2)
 
 
 if __name__ == "__main__":
