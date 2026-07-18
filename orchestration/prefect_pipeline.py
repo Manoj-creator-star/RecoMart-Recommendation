@@ -21,6 +21,11 @@ def run_step(name, cmd):
 def recomart_pipeline():
 
     run_step(
+        "Generate Source Data",
+        ["python", "data/generator/generate_data.py"]
+    )
+
+    run_step(
         "Ingestion",
         ["python", "-m", "ingestion.run_ingestion"]
     )

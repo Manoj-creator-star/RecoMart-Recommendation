@@ -1,4 +1,4 @@
-# 🛒 RecoMart - End-to-End Data Engineering Pipeline for a Recommendation System
+# 🛒 RecoMart - End-to-End Recommendation System Data Pipeline
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Prefect](https://img.shields.io/badge/Orchestration-Prefect-green)
@@ -6,398 +6,242 @@
 ![Pandas](https://img.shields.io/badge/Data-Pandas-yellow)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-## 📖 Overview
+## 📖 Project Summary
 
-RecoMart is an end-to-end Data Engineering and Machine Learning pipeline that simulates how an e-commerce company processes customer activity to generate personalized product recommendations.
+RecoMart is a modular data management pipeline that ingests clickstream, purchase history, and product catalog data to build a client-facing recommendation model. The repository includes:
 
-The project demonstrates the complete lifecycle of a modern data platform, including data generation, ingestion, validation, preprocessing, feature engineering, feature storage, model preparation, recommendation model training, evaluation, and workflow orchestration.
-
-The pipeline follows industry-standard Data Engineering practices and is designed to be modular, scalable, and reproducible.
-
----
-
-# 🎯 Business Problem
-
-RecoMart is an e-commerce platform that wants to improve customer engagement by recommending relevant products based on customer browsing behavior and purchase history.
-
-The platform receives data from multiple sources:
-
-- Customer Purchase History
-- Website Clickstream Events
-- Product Metadata from an external REST API
-
-The objective is to automatically ingest, validate, process, and transform this data into features that can be used to train a recommendation model.
+- data ingestion from CSV sources and external REST API
+- data validation and quality reporting
+- preprocessing and feature engineering
+- SQLite-based feature store registration
+- training dataset preparation
+- KNN recommendation model training and evaluation
+- workflow orchestration using Python scripts and Prefect
 
 ---
 
-# 🚀 Project Objectives
+## 🎯 Business Problem
 
-- Generate realistic e-commerce datasets
-- Automate data ingestion
-- Validate incoming datasets
-- Produce dynamic data quality reports
-- Prepare clean analytical datasets
-- Engineer reusable machine learning features
-- Store features in a centralized Feature Store
-- Build reproducible training datasets
-- Train recommendation models
-- Evaluate model performance
-- Orchestrate the complete pipeline using Prefect
+RecoMart is an e-commerce startup aiming to boost customer engagement by recommending relevant products to shoppers based on their browsing and purchase behavior.
+
+The platform processes several data sources to support recommendations:
+
+- user clickstream events
+- historical purchase transactions
+- product metadata from an external API
+
+The expected pipeline output is a validated training dataset, feature store artifacts, a trained recommendation model, and model evaluation metrics.
 
 ---
 
-# 🏗️ Solution Architecture
+## 🚀 Objectives
+
+- Automate ingestion of source and API product data
+- Validate dataset quality before transformation
+- Prepare a cleaned analytical dataset
+- Engineer user, product, and interaction features
+- Store features in a SQLite feature store
+- Prepare a training dataset for recommendation modeling
+- Train and serialize a collaborative recommendation model
+- Evaluate model predictions and ranking performance
+- Orchestrate end-to-end execution using scripted workflow
+
+---
+
+## 📁 Repository Structure
 
 ```text
-                     Fake Store API
-                            │
-Purchase History CSV   Clickstream CSV
-         │                    │
-         └──────────┬─────────┘
-                    │
-                    ▼
-             Data Ingestion
-                    │
-                    ▼
-              Raw Data Layer
-                    │
-                    ▼
-            Data Validation
-                    │
-                    ▼
-        Data Quality Report
-                    │
-                    ▼
-          Data Preparation
-                    │
-                    ▼
-         Feature Engineering
-                    │
-                    ▼
-         SQLite Feature Store
-                    │
-                    ▼
-      Training Dataset Creation
-                    │
-                    ▼
-      Recommendation Model
-                    │
-                    ▼
-         Model Evaluation
-```
-
----
-
-# ⚙️ Technology Stack
-
-| Category | Technology |
-|-----------|------------|
-| Programming Language | Python |
-| Workflow Orchestration | Prefect |
-| Data Processing | Pandas |
-| API Integration | Requests |
-| Feature Store | SQLite |
-| Machine Learning | Scikit-learn |
-| Model Serialization | Joblib |
-| Data Versioning | DVC |
-| Version Control | Git |
-| Data Visualization | Matplotlib |
-
----
-
-# 📂 Data Sources
-
-## 1. Purchase History
-
-Source: CSV
-
-Contains:
-
-- Order ID
-- User ID
-- Product ID
-- Quantity
-- Price
-- Purchase Timestamp
-
----
-
-## 2. Clickstream Data
-
-Source: CSV
-
-Contains:
-
-- User ID
-- Product ID
-- Event Type
-- Timestamp
-
-Examples:
-
-- View
-- Click
-- Wishlist
-- Add to Cart
-
----
-
-## 3. Product Metadata
-
-Source:
-
-https://fakestoreapi.com/products
-
-Contains:
-
-- Product Name
-- Category
-- Price
-- Rating
-- Rating Count
-- Product Description
-
----
-
-# 📁 Project Structure
-
-```text
-recomart-pipeline/
-
-│
+RecoMart-Recommendation/
 ├── config/
+│   └── config.py
 ├── data/
-│   ├── source/
-│   ├── raw/
+│   ├── model/
 │   ├── processed/
-│   └── model/
-│
-├── ingestion/
-├── validation/
-├── preprocessing/
-├── transformation/
+│   ├── raw/
+│   │   ├── clickstream/
+│   │   ├── purchase/
+│   │   └── products/
+│   └── source/
+├── docs/
 ├── feature_store/
+├── ingestion/
 ├── models/
 ├── orchestration/
-├── reports/
+├── preprocessing/
+├── transformation/
+├── validation/
 ├── database/
-├── sql/
 ├── logs/
-│
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-# 🔄 Pipeline Workflow
+## 🧩 Data Sources
 
-## Step 1 – Data Generation
+### 1. Clickstream Data
 
-Synthetic datasets are generated for:
+- Stored in `data/raw/clickstream/`
+- Source file: `data/source/clickstream.csv`
+- Events include `view`, `click`, `wishlist`, `add_to_cart`, and `purchase`
+- Used to create interaction-level event scores
 
-- Purchase History
-- Customer Clickstream
+### 2. Purchase History
 
----
+- Stored in `data/raw/purchase/`
+- Source file: `data/source/purchase_history.csv`
+- Includes `order_id`, `user_id`, `product_id`, `quantity`, `price`, and `purchase_time`
+- Used to calculate purchase statistics and prepare features
 
-## Step 2 – Data Ingestion
+### 3. Product Metadata
 
-The ingestion layer collects data from:
-
-- Purchase CSV
-- Clickstream CSV
-- Fake Store REST API
-
-The datasets are stored in the Raw Data Layer.
-
----
-
-## Step 3 – Data Validation
-
-Each dataset is validated independently.
-
-Validation includes:
-
-- Missing Values
-- Duplicate Records
-- Invalid Prices
-- Invalid Quantities
-- Invalid Event Types
-
-A consolidated Data Quality Report is generated automatically.
+- Downloaded from `https://fakestoreapi.com/products`
+- Stored in `data/raw/products/`
+- Includes `product_id`, `title`, `category`, `price`, `rating_rate`, and `rating_count`
 
 ---
 
-## Step 4 – Data Preparation
+## 🔧 Core Pipeline Modules
 
-The preprocessing layer:
+### Ingestion
 
-- Loads validated datasets
-- Merges purchase history with product metadata
-- Merges clickstream data
-- Cleans missing values
-- Standardizes data types
-- Creates derived attributes
-- Produces a processed analytical dataset
+- `ingestion/run_ingestion.py` orchestrates ingestion of clickstream, purchase, and product data.
+- `ingestion/ingest_clickstream.py` copies clickstream CSV from `data/source/` to `data/raw/clickstream/`.
+- `ingestion/ingest_purchase.py` copies purchase CSV from `data/source/` to `data/raw/purchase/`.
+- `ingestion/ingest_products.py` downloads product metadata from the external API to `data/raw/products/`.
 
----
+### Validation
 
-## Step 5 – Feature Engineering
+- `validation/validate_clickstream.py` validates event types, missing values, and duplicates.
+- `validation/validate_purchase.py` checks missing values, duplicates, negative prices, and invalid quantities.
+- `validation/validate_products.py` inspects product catalog completeness and price validity.
+- `validation/utils.py` provides summary metrics for each dataset.
 
-Three feature tables are created:
+### Data Preparation
 
-### User Features
+- `preprocessing/prepare_data.py` loads the latest raw clickstream, purchase, and product files.
+- It merges purchase records with product metadata, then joins clickstream events on `user_id` and `product_id`.
+- Cleaning steps include duplicate removal, missing value imputation, datetime conversion, text normalization, derived feature generation, and column pruning.
+- Output saved to `data/processed/prepared_dataset.csv`.
 
-Examples:
+### Feature Engineering
 
-- Total Purchases
-- Total Quantity
-- Average Purchase Value
-- Unique Products Purchased
+- `transformation/feature_engineering.py` generates the feature tables using:
+  - `transformation/user_features.py`
+  - `transformation/product_features.py`
+  - `transformation/interaction_features.py`
+- Feature tables are loaded into `database/feature_store.db` via `transformation/load_to_sqlite.py`.
 
----
+### Feature Store
 
-### Product Features
+- `database/feature_store.db` contains:
+  - `user_features`
+  - `product_features`
+  - `interaction_features`
+- `feature_store/register_features.py` records feature metadata in `feature_metadata`.
 
-Examples:
+### Training Data
 
-- Product Popularity
-- Average Price
-- Product Rating
-- Rating Count
+- `models/prepare_training_data.py` builds `data/model/training_data.csv` from the `interaction_features` table.
+- It maps interaction scores to a rating-style training dataset for collaborative modeling.
 
----
+### Modeling
 
-### Interaction Features
+- `models/train_model.py` trains a KNN model using a user-item interaction matrix.
+- The serialized model artifact is saved to `models/saved_models/knn_model.pkl`.
+- `models/recommend.py` loads the saved model and returns JSON-formatted top-K recommendations for a user.
+- `models/predict.py` provides a user-based recommendation helper for inference.
 
-Examples:
+### Evaluation
 
-- User ID
-- Product ID
-- Customer Event
-- Interaction Score
-
----
-
-## Step 6 – Feature Store
-
-The engineered features are stored inside a SQLite Feature Store.
-
-Feature tables:
-
-- User Features
-- Product Features
-- Interaction Features
-
-The Feature Store enables feature reuse without recomputing transformations.
+- `models/evaluate.py` runs a holdout-style ranking evaluation with Precision@K, Recall@K, and NDCG metrics.
+- `models/evaluate_metrics.py` computes proxy recommendation metrics and similarity statistics.
 
 ---
 
-## Step 7 – Training Dataset Preparation
+## 🔄 Workflow Orchestration
 
-Interaction features are converted into a training dataset consisting of:
+### Scripted Pipeline
 
-- User ID
-- Product ID
-- Rating
+- `orchestration/pipeline.py` executes the following sequence:
+  1. Generate source data
+  2. Ingestion
+  3. Clickstream validation
+  4. Purchase validation
+  5. Product validation
+  6. Data preparation
+  7. Feature engineering
+  8. Feature store registration
+  9. Training data preparation
+  10. Model training
+  11. Model evaluation
 
----
+### Prefect-compatible Pipeline
 
-## Step 8 – Recommendation Model
-
-The recommendation model is trained using historical customer-product interactions.
-
-The trained model is serialized and stored for future predictions.
-
----
-
-## Step 9 – Model Evaluation
-
-The trained model is evaluated to verify recommendation quality.
-
----
-
-## Step 10 – Workflow Orchestration
-
-The complete pipeline is orchestrated using Prefect.
-
-Pipeline execution includes:
-
-- Data Ingestion
-- Validation
-- Data Preparation
-- Feature Engineering
-- Feature Store Registration
-- Training Dataset Preparation
-- Model Training
-- Model Evaluation
+- `orchestration/prefect_pipeline.py` implements the same step sequence and adds evaluation metrics and recommendation generation.
 
 ---
 
-# 📊 Project Outputs
+## 🚀 Setup and Execution
 
-## Generated Datasets
+### Install dependencies
 
-- Raw Data
-- Processed Dataset
-- User Features
-- Product Features
-- Interaction Features
-- Training Dataset
+```bash
+pip install -r requirements.txt
+```
 
----
+### Run the full pipeline
 
-## Generated Database
+```bash
+python -m orchestration.pipeline
+```
 
-SQLite Feature Store
+### Run the Prefect-based pipeline
 
-Contains:
+```bash
+python -m orchestration.prefect_pipeline
+```
 
-- user_features
-- product_features
-- interaction_features
+### Run individual stages
 
----
-
-## Generated Reports
-
-- Data Quality Report
-- Validation Summary
-- Model Evaluation Report
-
----
-
-## Generated Models
-
-Serialized Recommendation Model
+- Ingestion: `python -m ingestion.run_ingestion`
+- Validation: `python -m validation.validate_clickstream` / `python -m validation.validate_purchase` / `python -m validation.validate_products`
+- Preparation: `python -m preprocessing.prepare_data`
+- Feature engineering: `python -m transformation.feature_engineering`
+- Train model: `python -m models.train_model`
+- Evaluate model: `python -m models.evaluate`
+- Generate recommendations: `python -m models.recommend`
 
 ---
 
-# ✨ Key Features
+## 📊 Outputs and Artifacts
 
-- Modular pipeline architecture
-- Automated data ingestion
-- REST API integration
-- Dynamic data validation
-- Automated validation reporting
-- Data preprocessing
-- Feature engineering
-- SQLite Feature Store
-- Data versioning using DVC
-- Prefect workflow orchestration
-- End-to-end reproducible pipeline
+- `data/processed/prepared_dataset.csv` — cleaned analytical dataset
+- `database/feature_store.db` — SQLite feature store
+- `data/model/training_data.csv` — training dataset
+- `models/saved_models/knn_model.pkl` — serialized user-item KNN model
+- `logs/` — pipeline runtime logs and audit messages
 
 ---
 
-# 🔮 Future Enhancements
+## 📌 Notes
 
-- Apache Kafka for real-time ingestion
-- Snowflake Data Warehouse integration
-- AWS S3 Data Lake
-- Feast Feature Store
-- GitHub Actions CI/CD
-- Docker containerization
+- `config/config.py` creates raw data folders and sets the external API endpoint.
+- Feature metadata is registered in `database/feature_store.db` by `feature_store/register_features.py`.
+- Interaction scores are derived from event types using a configurable mapping in `transformation/interaction_features.py`.
+
+---
+
+## 🔮 Future Scope
+
+- Add real-time streaming ingestion with Kafka
+- Implement Feast or a managed feature store
+- Add Docker support for reproducible deployment
+- Extend model selection to include matrix factorization and content-based algorithms
+- Replace placeholder evaluation metrics with production ranking metrics
+- Add test coverage and CI automation
+
 
 ---
 

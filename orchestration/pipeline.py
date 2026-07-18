@@ -2,6 +2,7 @@ import subprocess
 import time
 
 steps = [
+    ("Generate Source Data", ["python", "data/generator/generate_data.py"]),
     ("Ingestion", ["python", "-m", "ingestion.run_ingestion"]),
     ("Validation Clickstream", ["python", "-m", "validation.validate_clickstream"]),
     ("Validation Purchase", ["python", "-m", "validation.validate_purchase"]),
@@ -13,7 +14,6 @@ steps = [
     ("Train Model", ["python", "-m", "models.train_model"]),
     ("Evaluate Model", ["python", "-m", "models.evaluate"]),
 ]
-
 for name, cmd in steps:
     print(f"\n{'='*60}")
     print(f"Running: {name}")
