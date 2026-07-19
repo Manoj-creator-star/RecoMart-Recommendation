@@ -197,6 +197,13 @@ def main():
     print(f"Products        : {metrics['products']}")
     print(f"Average Similarity : {metrics['average_similarity']:.4f}")
     print(f"Best Model : {metrics['best_model']}")
+    print("\nDetailed Metrics by Model Variant:\n")
+    for model_name, results in metrics["comparison"].items():
+        print(f"{model_name}")
+        print(f"  Precision@{K} : {results['precision_at_k']:.4f}")
+        print(f"  Recall@{K}    : {results['recall_at_k']:.4f}")
+        print(f"  NDCG@{K}      : {results['ndcg_at_k']:.4f}")
+        print("-" * 40)
     print("\nEvaluation Completed Successfully")
 
 
