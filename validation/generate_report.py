@@ -16,14 +16,20 @@ REPORT_DIR = BASE_DIR / "validation_reports"
 REPORT_DIR.mkdir(exist_ok=True)
 REPORT_PATH = REPORT_DIR / "data_quality_report.csv"
 
-report.to_csv(REPORT_PATH, index=False)
+if REPORT_PATH.exists() and REPORT_PATH.stat().st_size > 0:
+    existing_report = pd.read_csv(REPORT_PATH)
+    combined_report = pd.concat([existing_report, report], ignore_index=True)
+else:
+    combined_report = report
+
+combined_report.to_csv(REPORT_PATH, index=False)
 
 print("\n" + "=" * 65)
 print("           RECOMART DATA QUALITY REPORT")
 print("=" * 65)
 print(f"Generated On : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
-print(report.to_string(index=False))
+print(combined_report.to_string(index=False))
 
 print("\n" + "-" * 65)
 print(f"Overall Status : {'PASSED' if (report['Status'] == 'Passed').all() else 'FAILED'}")
