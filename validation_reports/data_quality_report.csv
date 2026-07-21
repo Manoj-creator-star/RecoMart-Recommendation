@@ -2,3 +2,6 @@ Dataset,Status,Rows,Missing,Duplicates,Validation Time
 Purchase,Passed,2500,0,0,2026-07-18 11:07:32
 Clickstream,Passed,10000,0,0,2026-07-18 11:07:32
 Products,Passed,20,0,0,2026-07-18 11:07:32
+Purchase,Passed,2500,0,0,2026-07-21 11:02:24
+Clickstream,Passed,10000,0,0,2026-07-21 11:02:24
+Products,Passed,20,0,0,2026-07-21 11:02:24
