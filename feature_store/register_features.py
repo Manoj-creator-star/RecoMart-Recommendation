@@ -1,6 +1,10 @@
 import sqlite3
+from pathlib import Path
 
-DATABASE = "database/feature_store.db"
+DB_DIR = Path("database")
+DB_DIR.mkdir(parents=True, exist_ok=True)
+
+DATABASE = DB_DIR / "feature_store.db"
 
 conn = sqlite3.connect(DATABASE)
 
