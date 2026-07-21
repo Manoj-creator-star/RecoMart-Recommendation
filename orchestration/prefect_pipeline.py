@@ -1,5 +1,9 @@
 import subprocess
+import sys
 import time
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
 def run_step(name, cmd):
@@ -10,7 +14,7 @@ def run_step(name, cmd):
 
     start = time.time()
 
-    result = subprocess.run(cmd)
+    result = subprocess.run(cmd, cwd=str(ROOT_DIR))
 
     if result.returncode != 0:
         raise Exception(f"{name} Failed")
@@ -31,18 +35,8 @@ def recomart_pipeline():
     )
 
     run_step(
-        "Validation Clickstream",
-        ["python", "-m", "validation.validate_clickstream"]
-    )
-
-    run_step(
-        "Validation Purchase",
-        ["python", "-m", "validation.validate_purchase"]
-    )
-
-    run_step(
-        "Validation Products",
-        ["python", "-m", "validation.validate_products"]
+        "Validation Report",
+        [sys.executable, "-m", "validation.generate_report"]
     )
 
     run_step(
